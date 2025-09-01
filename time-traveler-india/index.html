@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Time Traveler India</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <h1>Explore India's wonders, watch fun 3D videos, and ace quizzes to unlock new places!</h1>
+    <p class="subtitle">Finish all 4 boards to claim your travel discount reward 🎉</p>
+  </header>
+
+  <section class="boards">
+    <article class="card">
+      <img src="images/north.jpg" alt="North India">
+      <h3>North India</h3>
+      <p>Start here! 10 iconic places.</p>
+      <button class="enter-btn" data-region="north" onclick="goToRegion('north')">Enter</button>
+    </article>
+
+    <article class="card">
+      <img src="images/south.jpg" alt="South India">
+      <h3>South India</h3>
+      <p>Unlock by finishing North.</p>
+      <button class="enter-btn locked" id="btn-south" disabled>🔒 Locked</button>
+    </article>
+
+    <article class="card">
+      <img src="images/east.jpg" alt="East India">
+      <h3>East India</h3>
+      <p>Unlock by finishing South.</p>
+      <button class="enter-btn locked" id="btn-east" disabled>🔒 Locked</button>
+    </article>
+
+    <article class="card">
+      <img src="images/west.jpg" alt="West India">
+      <h3>West India</h3>
+      <p>Unlock by finishing East.</p>
+      <button class="enter-btn locked" id="btn-west" disabled>🔒 Locked</button>
+    </article>
+  </section>
+
+  <footer class="footer">
+    <button class="reward-btn" id="rewardBtn" onclick="goReward()" disabled>🎁 Claim Reward</button>
+  </footer>
+</body>
+</html>

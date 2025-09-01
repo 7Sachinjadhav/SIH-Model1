@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>North India - Time Traveler India</title>
+  <link rel="stylesheet" href="../style.css">
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <style>
+    .places { display:flex; flex-wrap:wrap; gap:20px; padding:20px; justify-content:center; }
+    .place-card { width:250px; background:#fff; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,.2); padding:10px; text-align:center; }
+    .place-card img { width:100%; height:170px; object-fit:cover; border-radius:8px; }
+    .video-btn,.quiz-btn { margin-top:10px; padding:8px 12px; border:none; border-radius:6px; font-size:15px; cursor:pointer; }
+    .video-btn{ background:#007bff; color:#fff; }
+    .quiz-btn{ background:#28a745; color:#fff; }
+    .quiz-btn[disabled], .video-btn[disabled]{ background:#bbb; cursor:not-allowed; }
+    .video-player{ margin-top:10px; display:none; }
+
+    /* Quiz modal */
+    #quizModal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+    #quizModalContent {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 700px;
+      width: 90%;
+    }
+    .q { margin-bottom: 15px; }
+    .q h4 { margin-bottom: 6px; }
+    .q label { display: block; }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center">North India – 10 Iconic Places</h1>
+
+  <section class="places">
+    <!-- 1 Taj Mahal -->
+    <div class="place-card">
+      <img src="../images/north/tajmahal.jpg" alt="Taj Mahal">
+      <h3>Taj Mahal</h3>
+      <button class="video-btn" onclick="playVideo(0)">▶ 3D Video</button>
+      <div class="video-player" id="player0"></div>
+      <button class="quiz-btn" id="quiz0" disabled onclick="startQuiz(0)">🧠 Quiz</button>
+    </div>
+
+    <!-- 2 Red Fort -->
+    <div class="place-card">
+      <img src="../images/north/redfort.jpg" alt="Red Fort">
+      <h3>Red Fort</h3>
+      <button class="video-btn" id="videoBtn1" onclick="playVideo(1)" disabled>▶ 3D Video</button>
+      <div class="video-player" id="player1"></div>
+      <button class="quiz-btn" id="quiz1" disabled onclick="startQuiz(1)">🧠 Quiz</button>
+    </div>
+
+    <!-- Rest locked -->
+    <div class="place-card"><img src="../images/north/qutubminar.jpg"><h3>Qutub Minar</h3><button class="video-btn" disabled>▶ 3D Video</button><button class="quiz-btn" disabled>🧠 Quiz</button></div>
+    <div class="place-card"><img src="../images/north/indiagate.jpg"><h3>India Gate</h3><button class="video-btn" disabled>▶ 3D Video</button><button class="quiz-btn" disabled>🧠 Quiz</button></div>
+    <div class="place-card"><img src="../images/north/lotustemple.jpg"><h3>Lotus Temple</h3><button class="video-btn" disabled>▶ 3D Video</button><button class="quiz-btn" disabled>🧠 Quiz</button></div>
+    <div class="place-card"><img src="../images/north/humayunstomb.jpg"><h3>Humayun's Tomb</h3><button class="video-btn" disabled>▶ 3D Video</button><button class="quiz-btn" disabled>🧠 Quiz</button></div>
+    <div class="place-card"><img src="../images/north/fatehpursikri.jpg"><h3>Fatehpur Sikri</h3><button class="video-btn" disabled>▶ 3D Video</button><button class="quiz-btn" disabled>🧠 Quiz</button></div>
+    <div class="place-card"><img src="../images/north/goldentemple.jpg"><h3>Golden Temple</h3><button class="video-btn" disabled>▶ 3D Video</button><button class="quiz-btn" disabled>🧠 Quiz</button></div>
+    <div class="place-card"><img src="../images/north/hawamahal.jpg"><h3>Hawa Mahal</h3><button class="video-btn" disabled>▶ 3D Video</button><button class="quiz-btn" disabled>🧠 Quiz</button></div>
+    <div class="place-card"><img src="../images/north/amerfort.jpg"><h3>Amer Fort</h3><button class="video-btn" disabled>▶ 3D Video</button><button class="quiz-btn" disabled>🧠 Quiz</button></div>
+  </section>
+
+  <!-- Quiz Modal -->
+  <div id="quizModal">
+    <div id="quizModalContent">
+      <h2>Quiz Time 🧠</h2>
+      <form id="quizForm"></form>
+      <br>
+      <button type="button" onclick="submitQuiz()">Submit Quiz</button>
+      <button type="button" onclick="closeQuiz()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const videoIds = ["_bMyBoaHg5w", "lvOIE6G0ihk"];
+    let players = [];
+    let currentQuizIndex = null;
+
+    const quizData = {
+      0: [ // Taj Mahal
+        { q: "Where is the Taj Mahal located?", options: ["Agra", "Delhi", "Jaipur"], answer: "Agra" },
+        { q: "Who built the Taj Mahal?", options: ["Shah Jahan", "Akbar", "Aurangzeb"], answer: "Shah Jahan" },
+        { q: "What is the Taj Mahal made of?", options: ["White Marble", "Red Sandstone", "Granite"], answer: "White Marble" },
+        { q: "In which century was the Taj Mahal built?", options: ["17th", "18th", "19th"], answer: "17th" },
+        { q: "The Taj Mahal was built in memory of?", options: ["Mumtaz Mahal", "Noor Jahan", "Jodha Bai"], answer: "Mumtaz Mahal" },
+        { q: "How many minarets does the Taj Mahal have?", options: ["4", "2", "6"], answer: "4" },
+        { q: "What river flows near the Taj Mahal?", options: ["Yamuna", "Ganga", "Godavari"], answer: "Yamuna" },
+        { q: "What color does the Taj Mahal appear at sunset?", options: ["Pinkish", "Blue", "Green"], answer: "Pinkish" },
+        { q: "Is the Taj Mahal a UNESCO site?", options: ["Yes", "No"], answer: "Yes" },
+        { q: "Which architectural style is seen in Taj Mahal?", options: ["Mughal", "Dravidian", "Gothic"], answer: "Mughal" }
+      ],
+      1: [ // Red Fort
+        { q: "Where is the Red Fort located?", options: ["Delhi", "Agra", "Amritsar"], answer: "Delhi" },
+        { q: "Who built the Red Fort?", options: ["Shah Jahan", "Akbar", "Bahadur Shah"], answer: "Shah Jahan" },
+        { q: "What is the Red Fort mainly made of?", options: ["Red Sandstone", "Marble", "Granite"], answer: "Red Sandstone" },
+        { q: "In which year was the Red Fort completed?", options: ["1648", "1526", "1707"], answer: "1648" },
+        { q: "Which UNESCO status does Red Fort have?", options: ["World Heritage Site", "Not Listed"], answer: "World Heritage Site" },
+        { q: "Which important event happens at Red Fort every 15th August?", options: ["PM hoists flag", "Republic Day parade", "Dussehra"], answer: "PM hoists flag" },
+        { q: "Which Mughal capital shifted here?", options: ["From Agra to Delhi", "From Delhi to Agra"], answer: "From Agra to Delhi" },
+        { q: "What is another name for Red Fort?", options: ["Lal Qila", "Qila Mubarak", "Shahi Qila"], answer: "Lal Qila" },
+        { q: "Which river is near the Red Fort?", options: ["Yamuna", "Ganga", "Sutlej"], answer: "Yamuna" },
+        { q: "What is the main entrance of the Red Fort called?", options: ["Lahori Gate", "Delhi Gate", "Agra Gate"], answer: "Lahori Gate" }
+      ]
+    };
+
+    function onYouTubeIframeAPIReady() {
+      videoIds.forEach((id, i) => {
+        players[i] = new YT.Player(`player${i}`, {
+          height: '200',
+          width: '100%',
+          videoId: id,
+          events: { onStateChange: e => onPlayerStateChange(e, i) }
+        });
+      });
+    }
+
+    function playVideo(i) {
+      document.getElementById(`player${i}`).style.display = 'block';
+      players[i].playVideo();
+    }
+
+    function onPlayerStateChange(event, i) {
+      if (event.data === YT.PlayerState.ENDED) {
+        document.getElementById(`quiz${i}`).disabled = false;
+      }
+    }
+
+    function startQuiz(i) {
+      currentQuizIndex = i;
+      const form = document.getElementById('quizForm');
+      form.innerHTML = '';
+      quizData[i].forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'q';
+        div.innerHTML = `<h4>Q${idx+1}. ${item.q}</h4>` +
+          item.options.map(opt => 
+            `<label><input type="radio" name="q${idx}" value="${opt}"> ${opt}</label>`
+          ).join('');
+        form.appendChild(div);
+      });
+      document.getElementById('quizModal').style.display = 'flex';
+    }
+
+    function submitQuiz() {
+      let score = 0;
+      quizData[currentQuizIndex].forEach((item, idx) => {
+        const selected = document.querySelector(`input[name="q${idx}"]:checked`);
+        if (selected && selected.value === item.answer) score++;
+      });
+      if (score >= 8) {
+        alert(`You scored ${score}/10. Great job! Next place unlocked.`);
+        const nextBtn = document.getElementById(`videoBtn${currentQuizIndex+1}`);
+        if (nextBtn) nextBtn.disabled = false;
+      } else {
+        alert(`You scored ${score}/10. You need at least 8 correct to unlock the next place.`);
+      }
+      closeQuiz();
+    }
+
+    function closeQuiz() {
+      document.getElementById('quizModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

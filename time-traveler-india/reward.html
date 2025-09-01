@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reward</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="subhero">
+    <h1>🎉 Congratulations! Reward Unlocked</h1>
+    <a href="index.html" class="back-link">← Back</a>
+  </header>
+  <main class="reward">
+    <p>You have completed all 4 boards. As a reward, you get a <strong>discount on travel</strong> to your favorite place!</p>
+    <p class="code">Reward Code: <span id="rewardCode"></span></p>
+    <p>Show or enter this code at checkout to redeem your discount.</p>
+    <p class="note">Note: This is a demo site; connect to your real coupon backend in production.</p>
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const code = 'TTI-' + Math.random().toString(36).slice(2,8).toUpperCase();
+      document.getElementById('rewardCode').textContent = code;
+    });
+  </script>
+</body>
+</html>
